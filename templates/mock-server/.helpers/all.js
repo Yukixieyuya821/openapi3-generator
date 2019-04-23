@@ -1,3 +1,4 @@
+const stringifyObject = require('stringify-object');
 // Module constructor provides dependency injection from the generator instead of relying on require's cache here to ensure
 // the same instance of Handlebars gets the helpers installed and Lodash is definitiely available
 // regardless of where remote templates reside: in another Node project or a plain directory, which may have different or no modules available.
@@ -46,10 +47,35 @@ module.exports = (Handlebars, _) =>{
   /**
    * Genarate a collection of success response.
    */
-  Handlebars.registerHelper('resolveResponse', (response, options) => {
-      const data = response.content['application/json'].schema.generatedExample;
-      return JSON.stringify(data, null, 2);
-  })
+  Handlebars.registerHelper('resolveMockResponse', (response, options) => {
+    const data = response.content['application/json'].schema.generatedExample;
+    const dataExtendArray = _.cloneDeepWith(data, value => {
+      // 对象数组长度扩展
+      if(Array.isArray(value) && _.isPlainObject(value[0])) {
+        return [{...value[0]}, {...value[0]}]
+      }
+    });
+    const result = _.cloneDeepWith(dataExtendArray, (value, key) => {
+      // 值转化
+      // 特殊值
+      if(key === 'pageIndex') return null;
+      if(key === 'pageSize') return null;
+      if(key === 'sort') return null;
+      if(key === 'totalElements') return 50;
+      if(key === 'totalPages') return null;
+
+      // id -> mock id
+      if(key === 'id' || /Id$/.test(key)) return _.uniqueId(key);
+      if(key === 'name' || /Name$/.test(key)) return _.uniqueId(key);
+      if(key === 'code' || /Code$/.test(key)) return _.uniqueId(key);
+
+      // 普通字符 -> key
+      if(value === 'string') return key;
+      // 普通数字 -> 1 TODD: 优化普通数字转化逻辑
+      if(value === 0) return 1;
+    })
+    return stringifyObject(result);
+  });
 
   /**
    * Checks if a collection of responses contains no error responses.

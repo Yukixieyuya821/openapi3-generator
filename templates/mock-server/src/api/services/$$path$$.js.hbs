@@ -14,7 +14,7 @@
 module.exports.{{../operationId}} = async (options) => {
   {{#each ../responses as |response|}}
   {{#equal @key '200'}}
-  const data = {{#resolveResponse response}}{{/resolveResponse}}
+  const data = {{#resolveMockResponse response}}{{/resolveMockResponse}}
   return {
     status: 200,
     data
