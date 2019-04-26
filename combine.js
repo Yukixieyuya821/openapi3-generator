@@ -50,17 +50,16 @@ const generate = config => new Promise((resolve, reject) => {
       try {
         if (stats.name === path.basename(mainFilePath)) {
           mainApi = await bundler(mainFilePath, baseDir);
-          next();
         }
-        if (path.extname(stats.name) === '.yaml') {
+        else if (path.extname(stats.name) === '.yaml') {
           const filepath = path.resolve(path.join(root, stats.name))
           const openapi = await bundler(filepath, baseDir);
           openapiList.push(openapi)
-          next();
         }
       } catch (e) {
         reject(e)
       }
+      next();
     });
 
     walker.on('errors', (root, nodeStatsArray) => {
