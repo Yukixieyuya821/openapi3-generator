@@ -1,6 +1,4 @@
 const express = require('express');
-const {{camelCase operation_name}} = require('../services/{{operation_name}}');
-
 const router = new express.Router();
 
 {{#each operation}}
@@ -10,6 +8,14 @@ const router = new express.Router();
  {{#each ../descriptionLines}}
  * {{{this}}}
  {{/each}}
+ * @param {Object} options
+{{#each ../parameters}}
+{{#if this.name}}
+ * @param {{../../../../openbrace}}{{capitalize type}}{{../../../../closebrace}} options.{{name}} {{inline description}}
+{{/if}}
+{{/each}}
+ * @throws {Error}
+ * @return {Promise}
  */
 router.{{@key}}('{{../../subresource}}', async (req, res, next) => {
   const options = {
@@ -27,29 +33,13 @@ router.{{@key}}('{{../../subresource}}', async (req, res, next) => {
       {{/match}}
     {{/each}}
   };
-
-  try {
-    const result = await {{camelCase ../../../operation_name}}.{{../operationId}}(options);
-    {{#ifNoSuccessResponses ../responses}}
-    res.status(200).send(result.data);
-    {{else}}
-    res.status(result.status || 200).send(result.data);
-    {{/ifNoSuccessResponses}}
-  } catch (err) {
-    {{#ifNoErrorResponses ../responses}}
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
-    });
-    {{else}}
-    return res.status(err.status).send({
-      status: err.status,
-      error: err.error
-    });
-    {{/ifNoErrorResponses}}
-  }
+  {{#each ../responses as |response|}}
+  {{#equal @key '200'}}
+  const data = {{#resolveMockResponse response}}{{/resolveMockResponse}}
+  res.json(data);
+  {{/equal}}
+  {{/each}}
 });
-
     {{/validMethod}}
   {{/each}}
 {{/each}}
