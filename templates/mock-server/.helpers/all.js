@@ -48,7 +48,8 @@ module.exports = (Handlebars, _) =>{
    * Genarate a collection of success response.
    */
   Handlebars.registerHelper('resolveMockResponse', (response, options) => {
-    const data = response.content['application/json'].schema.generatedExample;
+    const data = _.get(response, 'content.application/json.schema.generatedExample');
+    if(!data) return '{}'
     const dataExtendArray = _.cloneDeepWith(data, value => {
       // 对象数组长度扩展
       if(Array.isArray(value) && _.isPlainObject(value[0])) {
