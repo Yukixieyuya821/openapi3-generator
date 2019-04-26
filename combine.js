@@ -31,6 +31,7 @@ program
     defaultOutput)
   .option('-m, --main <mainFilePath>', 'main file, last openapi file in merge list',
     mainFilePath)
+  .option('--no-components', 'remove components')
   .parse(process.argv);
 
 if (!openapiDir) {
@@ -71,6 +72,10 @@ const generate = config => new Promise((resolve, reject) => {
         openapiList.push(mainApi);
       }
       const result = merge.all(openapiList);
+
+      // remove components
+      if(program.components === false) delete result.components;
+
       xfs.writeFileSync(program.output, YAML.safeDump(result));
       resolve();
     });
