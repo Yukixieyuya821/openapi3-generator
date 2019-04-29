@@ -8,7 +8,7 @@
 To use it from the CLI:
 
 ```bash
-npm install -g openapi3-generator
+npm install -g git+https://gitlab.sdtdev.net/rd/tools/openapi3-generator.git
 ```
 
 ## Requirements
@@ -32,16 +32,29 @@ npm install -g openapi3-generator
     -h, --help                     output usage information
 ```
 
+```baxh
+  Usage: oc [options] <openapiDirPath>
+
+
+  Options:
+
+    -V, --version                  output the version number
+    -o, --output <outputFilePath>  where to put the generated file (defaults to [currentDirectory]/combine.yaml)
+    -m, --main <mainFilePath>      main file, last openapi file in merge list
+    --no-components                remove components (default: true)
+    -h, --help                     output usage information
+```
+
 #### Examples
 
 The shortest possible syntax:
 ```bash
-og openapi.yaml markdown
+og openapi.yaml mock-server
 ```
 
 Specify where to put the generated code:
 ```bash
-og -o ./my-docs openapi.yaml markdown
+og -o ./my-docs openapi.yaml mock-server
 ```
 
 ## Templates

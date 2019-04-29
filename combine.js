@@ -27,7 +27,7 @@ program
     baseDir = openapiDir;
     mainFilePath = path.resolve(baseDir, 'main.yaml')
 })
-  .option('-o, --output <outputFilePath>', 'where to put the generated file (defaults to current directory)',
+  .option('-o, --output <outputFilePath>', 'where to put the generated file (defaults to [currentDirectory]/combine.yaml)',
     defaultOutput)
   .option('-m, --main <mainFilePath>', 'main file, last openapi file in merge list',
     mainFilePath)
