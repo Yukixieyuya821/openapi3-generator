@@ -9,6 +9,10 @@
     "oc": "./combine.js",
     "openapi3-combine": "./combine.js"
   },
+  "scripts": {
+    "test-combine": "node ./combine ./tests/openapi3 -o ./tests/generated/combine.yaml",
+    "test-mock-server": "node ./cli -o ./tests/generated/mock-server ./tests/generated/test.yaml mock-server"
+  },
   "bugs": {
     "url": "https://github.com/fmvilas/openapi3-generator/issues"
   },
