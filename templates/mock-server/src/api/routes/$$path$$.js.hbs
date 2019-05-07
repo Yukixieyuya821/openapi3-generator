@@ -34,10 +34,10 @@ router.{{@key}}('{{../../subresource}}', async (req, res, next) => {
     {{/each}}
   };
   {{#each ../responses as |response|}}
-  {{#equal @key '200'}}
+  {{#match @key "(200|201)"}}
   const data = {{#resolveMockResponse response}}{{/resolveMockResponse}}
   res.json(data);
-  {{/equal}}
+  {{/match}}
   {{/each}}
 });
     {{/validMethod}}
